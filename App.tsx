@@ -4,13 +4,14 @@ import {useDynamicValue, withDynamicConfigProvider} from "./src/hooks/useDynamic
 import * as SplashScreen from 'expo-splash-screen';
 import {useFonts} from "expo-font";
 import {useEffect} from "react";
+import { StatusBar, View} from "react-native";
+import Loader from "./src/components/Loader";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 function App() {
 
-    const {config} = useDynamicValue();
-
+    const {currentTheme} = useDynamicValue()
     const [loaded, error] = useFonts({
         SpaceMono: require('./assets/fonts/SpaceMono-Regular.ttf'),
         Inter: require("./assets/fonts/Inter-Regular.ttf"),
@@ -29,11 +30,26 @@ function App() {
         }
     }, [loaded]);
 
-
+    if(!loaded){
+        return (
+            <View>
+                <Loader size={'small'} color={"red"}/>
+            </View>
+        )
+    }
   return (
-      <NavigationContainer>
-          <AppNavigator/>
-      </NavigationContainer>
+      <>
+          <StatusBar
+            barStyle={currentTheme === "light"
+                ? "dark-content"
+                : "light-content"
+            }
+          />
+          <NavigationContainer>
+              <AppNavigator/>
+          </NavigationContainer>
+      </>
+
   );
 }
 
