@@ -3,7 +3,7 @@ export const styles = StyleSheet.create({
     container: {
       flex:1,
       paddingVertical: 20,
-      paddingHorizontal: 20
+      paddingHorizontal: 20,
     },
     changeWrapper: {
         height: 50,
@@ -29,10 +29,20 @@ export const styles = StyleSheet.create({
         padding: 5,
         marginBottom: 10,
     },
+    iconItem: {
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        marginTop: 10
+    },
     wrapperForColor: {
         width: 30,
         height: 30,
         borderColor: "red",
         borderWidth: 1,
+    },
+    wrapperForBackgroundOption: {
+        alignItems:"center",
+        width: "40%"
     }
 })

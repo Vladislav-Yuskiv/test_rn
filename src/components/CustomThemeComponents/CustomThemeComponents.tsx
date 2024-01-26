@@ -23,14 +23,14 @@ export function Text(props: TextProps) {
 }
 
 export function View(props: ViewProps) {
-    const {currentTheme} = useDynamicValue();
+    const {currentTheme,config} = useDynamicValue();
 
 
     const { style, ...otherProps } = props;
 
     const dynamicStylesForView: StyleProp<ViewStyle> = {
-        backgroundColor: getCurrentColor(currentTheme,"background"),
+        backgroundColor: getCurrentColor(currentTheme,"background",config.changedColorsByUser),
     }
 
-    return <DefaultView style={[style, dynamicStylesForView]} {...otherProps} />;
+    return <DefaultView style={[dynamicStylesForView,style]} {...otherProps} />;
 }

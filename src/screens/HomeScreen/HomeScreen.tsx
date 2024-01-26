@@ -1,9 +1,13 @@
 import {View,Text} from "../../components/CustomThemeComponents";
 import {HomeScreenProps} from "../../types/screenTypes";
-import {Alert, ScrollView, TouchableOpacity} from "react-native";
+import {Alert, ScrollView, TouchableOpacity,Image,ImageSourcePropType} from "react-native";
 import {useDynamicValue} from "../../hooks/useDynamicValue";
 import {styles} from "./styles";
+import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
+import * as MediaLibrary from "expo-media-library";
 import {getCurrentColor} from "../../utils";
+import {TEST_ICONS} from "../../utils/TestIcons";
 
 export default function HomeScreen({}:HomeScreenProps){
 
@@ -12,8 +16,49 @@ export default function HomeScreen({}:HomeScreenProps){
         setConfigValue,
         currentTheme
     } = useDynamicValue()
+
+    const selectPicture = async () => {
+        if (!(await MediaLibrary.getPermissionsAsync())) {
+            await MediaLibrary.requestPermissionsAsync();
+        }
+
+        const photo = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+        });
+
+        if (photo.canceled) {
+            return;
+        }
+
+        const resultPhoto = await ImageManipulator.manipulateAsync(
+            photo.assets[0].uri,
+            [{ resize: { height: 50 } }],
+            {
+                compress: 0.9,
+                format: ImageManipulator.SaveFormat.JPEG,
+                base64: true,
+            }
+        );
+
+        await setConfigValue({
+            userImage: "data:image/jpg;base64," + resultPhoto.base64
+        })
+    }
     return  (
         <View style={styles.container}>
+
+            <TouchableOpacity
+                style={styles.userImageWrapper}
+                onPress={() => selectPicture()}
+            >
+                <View style={{
+                    ...styles.userImgWrapper,
+                    backgroundColor: getCurrentColor(currentTheme,"secondaryBackground")
+                }}>
+                        <Image source={{ uri: config.userImage } as ImageSourcePropType} style={styles.userPic} />
+                </View>
+            </TouchableOpacity>
             <TouchableOpacity
                 style={{
                     ...styles.nameWrapper,
@@ -41,6 +86,51 @@ export default function HomeScreen({}:HomeScreenProps){
                 <Text style={styles.userNameText}>{config.userName}</Text>
             </TouchableOpacity>
 
+            <Text
+                style={{
+                    ...styles.centerText,
+                    fontSize: config.fontSize + 5
+                }}
+            >
+                Test Icons
+            </Text>
+            <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                style={styles.testIconsWrapper}
+            >
+                {
+                    TEST_ICONS.map(testIcon => {
+                        const Icon = testIcon.icon
+
+                        const iconFill =  config.iconColor
+                        const iconSize = config.iconSize
+
+                        return (
+                            <View
+                                key={testIcon.id}
+                                style={{
+                                    ...styles.testIconWrapper,
+                                    padding: iconSize ,
+                                    backgroundColor: getCurrentColor(currentTheme,"secondaryBackground"),
+                                }}
+                            >
+                                <Icon size={iconSize} fill={iconFill}/>
+                            </View>
+                        )
+                    })
+
+                }
+            </ScrollView>
+
+            <Text
+                style={{
+                    ...styles.centerText,
+                    fontSize: config.fontSize + 5
+                }}
+            >
+                Story
+            </Text>
             <ScrollView
                 style={styles.textWrapper}
                 showsVerticalScrollIndicator={false}

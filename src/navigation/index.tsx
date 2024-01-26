@@ -8,6 +8,7 @@ import SettingsIcon from "../components/svgs/SettingsIcon";
 import {useDynamicValue} from "../hooks/useDynamicValue";
 import {getCurrentColor} from "../utils";
 import {Alert, TouchableOpacity} from "react-native";
+import {TEST_ICONS} from "../utils/TestIcons";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -20,8 +21,8 @@ export default function AppNavigator() {
     } = useDynamicValue()
 
     const icons = {
-        Home: HomeIcon,
-        Settings: SettingsIcon ,
+        Home: TEST_ICONS.find(testIcon => testIcon.id === config.homeIcon)?.icon || HomeIcon,
+        Settings: TEST_ICONS.find(testIcon => testIcon.id === config.settingsIcon)?.icon || SettingsIcon,
     };
 
     return (
@@ -31,11 +32,11 @@ export default function AppNavigator() {
 
                 return {
                     tabBarStyle: {
-                        backgroundColor: getCurrentColor(currentTheme,"tabBarBackground"),
+                        backgroundColor: getCurrentColor(currentTheme,"tabBarBackground",config.changedColorsByUser),
                         height: 100 + config.fontSize,
                     },
                     headerStyle: {
-                        backgroundColor:getCurrentColor(currentTheme,"tabBarBackground"),
+                        backgroundColor:getCurrentColor(currentTheme,"tabBarBackground",config.changedColorsByUser),
                     },
                     headerTitleStyle: {
                         color: getCurrentColor(currentTheme,"text"),
@@ -47,8 +48,8 @@ export default function AppNavigator() {
                             <Text
                                 style={{
                                     color: p.focused
-                                        ? getCurrentColor(currentTheme,"tabActive")
-                                        : getCurrentColor(currentTheme,"tabInActive")
+                                        ? getCurrentColor(currentTheme,"tabActive",config.changedColorsByUser)
+                                        : getCurrentColor(currentTheme,"tabInActive",config.changedColorsByUser)
                                 }}
                             >
                                 {route.name}
@@ -61,8 +62,8 @@ export default function AppNavigator() {
                                 size={config.iconSize}
                                 fill={
                                     p.focused
-                                        ? getCurrentColor(currentTheme,"tabActive")
-                                        : getCurrentColor(currentTheme,"tabInActive")
+                                        ? getCurrentColor(currentTheme,"tabActive",config.changedColorsByUser)
+                                        : getCurrentColor(currentTheme,"tabInActive",config.changedColorsByUser)
                                 }
                                 focused={p.focused}
                             />

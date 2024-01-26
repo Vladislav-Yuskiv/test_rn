@@ -17,5 +17,30 @@ export const styles = StyleSheet.create({
     textWrapper: {
         marginTop: 20,
         paddingBottom: 20
-    }
+    },
+    testIconsWrapper: {
+        marginTop: 20,
+    },
+    testIconWrapper: {
+        justifyContent:"center",
+        alignItems: "center",
+        marginLeft: 20
+    },
+    centerText: {
+        textAlign: "center",
+        marginVertical: 10,
+    },
+    userImageWrapper: {
+        marginBottom: 20
+    },
+    userImgWrapper: {
+        borderRadius: 50,
+        marginLeft: "auto",
+        marginRight: "auto",
+    },
+    userPic: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+    },
 })

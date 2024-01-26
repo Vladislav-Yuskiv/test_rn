@@ -1,17 +1,20 @@
-import {ThemeMode} from "./types";
+import {ChangedColorsByUser, ThemeMode} from "./types";
 
 export interface IConfig {
     userName:string,
     currentMode:  ThemeMode,
+    changedColorsByUser: ChangedColorsByUser,
+    homeIcon: string,
+    settingsIcon: string,
     fontFamily: "SpaceMono" | "Inter" | "Sevillana",
     fontSize: number,
     iconSize: number,
     iconColor: string,
-    backgroundImage: string
+    userImage: string
 }
 
-export interface ITabIconProps {
-    focused: boolean;
+export interface IIconProps {
+    focused?: boolean;
     size: number;
     fill: string
 }
@@ -21,8 +24,19 @@ export interface IColorsInterface {
     background: string
     secondaryBackground: string
     titleColor:string
-    tabIconDefault: string
     tabBarBackground:string
     tabActive: string
     tabInActive: string
+}
+
+export interface IColorPickerModalConfig{
+    isOpen: boolean
+    currentTheme: "light" | "dark"
+    title: string
+    default: string
+    onSave: (value: string) => Promise<void>
+    additional?: {
+        color: string
+        size: number
+    }
 }

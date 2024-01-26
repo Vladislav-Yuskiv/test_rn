@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the alpha (last parameter) for transparency
     },
     modalView: {
         margin: 20,
@@ -19,12 +19,6 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-    },
-    previewStyles:{
-        marginBottom: 15
-    },
-    swatchesStyles: {
-        marginVertical: 15
     },
     textStyle: {
         color: 'white',
@@ -41,5 +35,16 @@ export const styles = StyleSheet.create({
     modalText: {
         marginBottom: 15,
         textAlign: 'center',
-    }
+    },
+    testsIconWrapper: {
+        flexWrap:"wrap",
+        flexDirection: "row",
+        marginBottom: 15
+    },
+    testIconWrapper: {
+        justifyContent:"center",
+        alignItems: "center",
+        marginRight: 10,
+        marginBottom: 10
+    },
 })

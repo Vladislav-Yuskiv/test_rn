@@ -7,5 +7,6 @@ export type ThemeColors = {
 };
 
 export  type ChangedColorsByUser = {
-    [key in "light" | "dark"] : Partial<IColorsInterface>
+    light?: Partial<IColorsInterface>;
+    dark?: Partial<IColorsInterface>;
 }

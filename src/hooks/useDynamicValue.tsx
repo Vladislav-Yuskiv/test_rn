@@ -10,41 +10,45 @@ import {ChangedColorsByUser, ThemeMode} from "../types/types";
 import {Appearance} from "react-native";
 import getColorScheme = Appearance.getColorScheme;
 import addChangeListener = Appearance.addChangeListener;
+import userImg from "../utils/defaultUserImage";
 
 
 interface IDynamicValueContext {
     config: IConfig,
     setConfigValue: (value: Partial<IConfig>) => Promise<void>,
     currentTheme: "light"| "dark",
-    changedColorsByUser: ChangedColorsByUser
     changeModeAndTheme: (mode:ThemeMode) => Promise<void>
     resetToDefaultSettings: () => Promise<void>
+    saveColorsByUser: (value: ChangedColorsByUser) => Promise<void>
 }
 
 const defaultValue: IDynamicValueContext = {
     config: {
         userName: "Your name here",
         currentMode: "system",
+        homeIcon: "5",
+        settingsIcon: "6",
         iconColor: "red",
         fontFamily: "SpaceMono",
         fontSize: 14,
         iconSize: 18,
-        backgroundImage: "",
-    },
-    changedColorsByUser: {
-        light: {
-            tabActive: "#000000",
-            tabInActive: "#ffffff"
+        userImage: userImg,
+        changedColorsByUser: {
+            light: {
+                tabActive: "#000000",
+                tabInActive: "#ffffff",
+            },
+            dark: {
+                tabActive: "#FFFFFF",
+                tabInActive: "#000000",
+            }
         },
-        dark: {
-            tabActive: "#FFFFFF",
-            tabInActive: "#000000"
-        }
     },
     currentTheme: "light",
     setConfigValue: async () => undefined,
     changeModeAndTheme: async ()  => undefined,
-    resetToDefaultSettings: async () => undefined
+    resetToDefaultSettings: async () => undefined,
+    saveColorsByUser: async () => undefined
 }
 
 const DynamicValueContext: Context<IDynamicValueContext> =
@@ -54,8 +58,7 @@ export const useDynamicValue: () => IDynamicValueContext = () =>
 function DynamicValueProvider (props: PropsWithChildren<any>){
 
     const [config,  setConfig] = useState<IConfig>(defaultValue.config)
-    const [changedColorsByUser, setColors] = useState<ChangedColorsByUser>(defaultValue.changedColorsByUser)
-    const [currentTheme, setCurrentTheme] = useState<"light"| "dark">("light")
+    const [currentTheme, setCurrentTheme] = useState<"light"| "dark">(defaultValue.currentTheme)
 
     //I decided to use AsyncStorage to simulate the working of a database.
     const { getItem, setItem } = useAsyncStorage('@config');
@@ -159,15 +162,33 @@ function DynamicValueProvider (props: PropsWithChildren<any>){
         setConfig(defaultConfig);
         await saveItemToStorage(defaultConfig);
     }
+
+    const saveColorsByUser = async (value: ChangedColorsByUser) => {
+        const result:ChangedColorsByUser = {
+            light: {
+                ...config.changedColorsByUser.light,
+                ...value?.light
+            },
+            dark: {
+                ...config.changedColorsByUser.dark,
+                ...value?.dark
+            }
+        }
+
+        const newConfig = {...config, changedColorsByUser: result}
+        setConfig(newConfig);
+        await saveItemToStorage(newConfig);
+
+    }
     return (
         <DynamicValueContext.Provider
             value={{
                 config,
                 setConfigValue,
                 currentTheme,
-                changedColorsByUser,
                 changeModeAndTheme,
-                resetToDefaultSettings
+                resetToDefaultSettings,
+                saveColorsByUser
             }}
         >
             {props.children}
